@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Reciclagem</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #2a7e3b, #6dbf71);
+            color: white;
+            padding: 20px;
+            background-size: cover;
+            background-attachment: fixed;
+            position: relative;
+        }
+        h1 {
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .bin {
+            width: 120px;
+            height: 160px;
+            border: 2px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+        .bin:hover {
+            transform: scale(1.1);
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .bin img {
+            width: 90px;
+            height: 130px;
+        }
+        .item {
+            width: 120px;
+            height: 120px;
+            cursor: grab;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
+            transition: 0.3s;
+        }
+        .item:hover {
+            transform: scale(1.1);
+        }
+        .item:active {
+            transform: scale(1.2);
+            opacity: 0.8;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        #congratulations {
+            margin-top: 20px;
+            font-size: 30px;
+            color: gold;
+            font-weight: bold;
+        }
+        #score {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+        #restart-btn {
+            margin-top: 30px;
+            font-size: 20px;
+            padding: 12px 24px;
+            cursor: pointer;
+            background-color: #ffcc00;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+            transition: 0.3s;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        #restart-btn:hover {
+            background-color: #ffdb4d;
+            transform: translateX(-50%) scale(1.1);
+            box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .bin.correct {
+            animation: glow 0.5s ease-in-out;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5); }
+            100% { box-shadow: 0px 0px 0px rgba(255, 255, 255, 0); }
+        }
+        .background-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: -1;
+    background-image: url(imagens/backgroud.jpg); 
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    opacity: 0.5;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="background-pattern"></div> 
+    <h1>♻️ Jogo da Reciclagem ♻️</h1>
+    <p>Coloque os itens para a lixeira correta!</p>
+    
+    <div class="container" id="bins">
+        <div class="bin" data-type="papel"><img src="imagens/lixeira_papel.png" alt="Lixeira de Papel"></div>
+        <div class="bin" data-type="metal"><img src="imagens/lixeira_metal.png" alt="Lixeira de Metal"></div>
+        <div class="bin" data-type="plastico"><img src="imagens/lixeira_plastico.png" alt="Lixeira de Plástico"></div>
+        <div class="bin" data-type="vidro"><img src="imagens/lixeira_vidro.png" alt="Lixeira de Vidro"></div>
+        <div class="bin" data-type="organico"><img src="imagens/lixeira_organico.png" alt="Lixeira Orgânica"></div>
+    </div>
+    
+    <div class="container" id="items">
+        <img class="item" id="papel-1" src="imagens/cx_papelao.png" draggable="true" data-type="papel" alt="Papel">
+        <img class="item" id="organico-2" src="imagens/casca_banana.png" draggable="true" data-type="organico" alt="Orgânico">
+        <img class="item" id="papel-2" src="imagens/papel_amassado.png" draggable="true" data-type="papel" alt="Papel">
+        <img class="item" id="plastico-3" src="imagens/copo_plastico.png" draggable="true" data-type="plastico" alt="Plástico">
+        <img class="item" id="vidro-2" src="imagens/garrafa_vidro.png" draggable="true" data-type="vidro" alt="Vidro">
+        <img class="item" id="metal-1" src="imagens/lata_coca.png" draggable="true" data-type="metal" alt="Metal">
+        <img class="item" id="metal-2" src="imagens/lata_feijao.png" draggable="true" data-type="metal" alt="Metal">
+        <img class="item" id="papel-3" src="imagens/jornal.png" draggable="true" data-type="papel" alt="Papel">
+        <img class="item" id="plastico-1" src="imagens/garrafa_pet.png" draggable="true" data-type="plastico" alt="Plástico">
+        <img class="item" id="plastico-2" src="imagens/sacola.png" draggable="true" data-type="plastico" alt="Plástico">
+        <img class="item" id="vidro-1" src="imagens/espelho.png" draggable="true" data-type="vidro" alt="Vidro">
+        <img class="item" id="organico-1" src="imagens/maca.png" draggable="true" data-type="organico" alt="Orgânico">
+        
+    </div>
+    
+    <div id="message"></div>
+    <div id="congratulations"></div>
+    <div id="score"></div>
+
+    <button id="restart-btn" onclick="restartGame()">🔄 Jogar Novamente</button>
+
+    <!-- Sons -->
+    <audio id="sound-correct" src="sons/correto.mp3"></audio>
+    <audio id="sound-wrong" src="sons/errado.mp3"></audio>
+    <audio id="sound-win" src="sons/win.mp3"></audio>
+
+    <script>
+        let selectedItem = null;
+    
+        const items = document.querySelectorAll(".item");
+        const bins = document.querySelectorAll(".bin");
+        const message = document.getElementById("message");
+        const congratulations = document.getElementById("congratulations");
+        const scoreDisplay = document.getElementById("score");
+        const restartBtn = document.getElementById("restart-btn");
+    
+        const soundCorrect = document.getElementById("sound-correct");
+        const soundWrong = document.getElementById("sound-wrong");
+        const soundWin = document.getElementById("sound-win");
+    
+        let correctItemCount = 0;
+        let incorrectItemCount = 0;
+    
+        items.forEach(item => {
+            item.addEventListener("click", () => {
+                selectedItem = item;
+                message.textContent = "Clique na lixeira correta";
+                message.style.color = "white";
+            });
+        });
+    
+        bins.forEach(bin => {
+            bin.addEventListener("click", () => {
+                if (!selectedItem) return;
+    
+                if (bin.dataset.type === selectedItem.dataset.type) {
+                    message.textContent = "✅ Correto!";
+                    message.style.color = "lightgreen";
+                    correctItemCount++;
+                    soundCorrect.play();
+                    selectedItem.style.display = "none";
+                    bin.classList.add("correct");
+                    setTimeout(() => {
+                        bin.classList.remove("correct");
+                    }, 500);
+                } else {
+                    message.textContent = "❌ Errado! Tente novamente.";
+                    message.style.color = "red";
+                    incorrectItemCount++;
+                    soundWrong.play();
+                }
+    
+                selectedItem = null;
+                
+                const allItemsCorrectlyPlaced = [...items].every(item => item.style.display === "none");
+    
+                if (allItemsCorrectlyPlaced) {
+                    const totalCount = correctItemCount + incorrectItemCount;
+                    const accuracy = ((correctItemCount / totalCount) * 100).toFixed(2);
+                    congratulations.textContent = "🎉 Parabéns! Você completou o jogo!";
+                    scoreDisplay.textContent = `Acertos: ${correctItemCount} | Erros: ${incorrectItemCount} | Precisão: ${accuracy}%`;
+                    soundWin.play();
+                    restartBtn.style.display = "block";
+                }
+            });
+        });
+    
+        function restartGame() {
+            correctItemCount = 0;
+            incorrectItemCount = 0;
+            message.textContent = "";
+            congratulations.textContent = "";
+            scoreDisplay.textContent = "";
+            restartBtn.style.display = "none";
+            items.forEach(item => {
+                item.style.display = "block";
+            });
+        }
+    </script>
+</body>
+</html>
